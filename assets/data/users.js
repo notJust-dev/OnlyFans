@@ -7,7 +7,7 @@ export default [
       'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/elon.png',
     name: 'Elon',
     handle: 'elon',
-    bio: 'hello',
+    bio: 'OnlyFans is a subscription-based content sharing platform that allows creators to monetize their content by providing exclusive access to their fans. It has become a popular platform for creators across various genres',
     subscriptionPrice: 0,
   },
   {
