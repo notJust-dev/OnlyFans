@@ -1,0 +1,18 @@
+type Post @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  text: String
+  image: String
+  likes: Int!
+  userID: ID! @index(name: "byUser")
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  handle: String!
+  bio: String
+  avatar: String
+  coverImage: String
+  subscriptionPrice: Float!
+  Posts: [Post] @hasMany(indexName: "byUser", fields: ["id"])
+}
