@@ -10,9 +10,10 @@ import { useState } from 'react';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import { DataStore } from 'aws-amplify';
+import { DataStore, Storage } from 'aws-amplify';
 import { Post } from '../src/models';
 import { useAuthenticator } from '@aws-amplify/ui-react-native';
+import * as Crypto from 'expo-crypto';
 
 const NewPost = () => {
   const [text, setText] = useState('');
@@ -24,12 +25,29 @@ const NewPost = () => {
 
   const onPost = async () => {
     console.warn('Post: ', text);
+    const imageKey = await uploadImage();
+
     await DataStore.save(
-      new Post({ text, likes: 0, userID: user.attributes.sub })
+      new Post({ text, likes: 0, userID: user.attributes.sub, image: imageKey })
     );
 
     setText('');
+    setImage('');
   };
+
+  async function uploadImage() {
+    try {
+      const response = await fetch(image);
+      const blob = await response.blob();
+      const fileKey = `${Crypto.randomUUID()}.png`;
+      await Storage.put(fileKey, blob, {
+        contentType: 'image/jpeg', // contentType is optional
+      });
+      return fileKey;
+    } catch (err) {
+      console.log('Error uploading file:', err);
+    }
+  }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
